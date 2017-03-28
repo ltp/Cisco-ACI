@@ -9,6 +9,25 @@ use LWP;
 use XML::Simple;
 
 our $VERSION = '0.01';
+our @LOGIN_ATTR = qw(
+buildTime
+creationTime
+firstLoginTime
+firstName
+guiIdleTimeoutSeconds
+lastName
+maximumLifetimeSeconds
+node
+refreshTimeoutSeconds
+remoteUser
+restTimeoutSeconds
+sessionId
+siteFingerprint
+token
+unixUserId
+userName
+version
+);
 
 sub new {
 	my ( $class, %args ) = @_;
@@ -27,9 +46,19 @@ sub login {
 
 	my $r = $self->__request( $self->__get_login_uri, to_json( $json ) );
 
-	$r = decode_json $r->content;
+	return $self->{ error } if $self->{ error };
 
-	return $r
+	$r = from_json( $r->content );
+
+	if ( defined $r->{ imdata } ) {
+		for my $a ( @LOGIN_ATTR ) {
+			$self->{ $a } = $r->{ imdata }->[0]->{ aaaLogin }->{ attributes }->{ $a }
+		}
+	}
+
+	#use Data::Dumper;
+	#print Dumper( $self );
+	return $self
 }
 
 sub refresh {}
@@ -60,21 +89,33 @@ sub __init {
 	$self->{ __ua } = LWP::UserAgent->new;
 	$self->{ __ua }->ssl_opts( verify_hostname => 0 );
 	$self->{ __ua }->ssl_opts( SSL_verify_mode => 0 );
+	$self->{ __ua }->cookie_jar( {} );
 
 	$self->{ __xp } = XML::Simple->new;
 
 	$self->{ __jp } = JSON->new;
 }
 
+sub overallHealth5min {
+	my $self = shift;
+
+	return $self->__request( $self->__get_uri( '/api/node/mo/topology/HDfabricOverallHealth5min-0.json' ) )
+}
+
 sub __request {
 	my ( $self, $uri, $data ) = @_;
+	my $r;
 
-	my $r = HTTP::Request->new( POST => $uri );
-	$r->content( $data );
+	if ( $data ) {
+		$r = HTTP::Request->new( POST => $uri );
+		$r->content( $data );
+	}
+	else {
+		$r = HTTP::Request->new( GET => $uri );
+	}
+
 	my $s = $self->{ __ua }->request( $r );
-	use Data::Dumper; print Dumper( $s );
-
-	die "Request failure: $!" unless $s->is_success;
+	$self->{ error } = "Login failure: $!" unless $s->is_success;
 
 	return $s
 }
@@ -95,6 +136,12 @@ sub __get_login_uri {
 	my $self = shift;
 
 	return $self->__get_uri( '/api/mo/aaaLogin.json' )
+}
+
+sub __get_fltCnts_uri {
+	my $self = shift;
+
+	return $self->__get_uri( '/api/node/mo/fltCnts.json' )
 }
 
 1;
