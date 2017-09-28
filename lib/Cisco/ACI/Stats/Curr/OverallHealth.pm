@@ -4,7 +4,7 @@ use Moose;
 
 extends 'Cisco::ACI::Stats::Curr';
 
-has 'healthAvg'		=> (is => 'rw', isa => 'String');
+has 'healthAvg'		=> (is => 'rw', isa => 'Int');
 has 'healthLast'	=> (is => 'rw', isa => 'String');
 has 'healthMax'		=> (is => 'rw', isa => 'String');
 has 'healthMin'		=> (is => 'rw', isa => 'String');

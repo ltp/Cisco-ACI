@@ -7,6 +7,7 @@ use JSON;
 use HTTP::Request;
 use LWP;
 use XML::Simple;
+use Cisco::ACI::Stats::Curr::OverallHealth;
 
 our $VERSION = '0.01';
 our @LOGIN_ATTR = qw(
@@ -99,7 +100,19 @@ sub __init {
 sub overallHealth5min {
 	my $self = shift;
 
-	return $self->__request( $self->__get_uri( '/api/node/mo/topology/HDfabricOverallHealth5min-0.json' ) )
+	my $r = $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/node/mo/topology/HDfabricOverallHealth5min-0.json' ) 
+		)->content
+	)->{ imdata }->[0];
+
+	#print "r = $r->{ fabricOverallHealthHist5min }->{ attributes }->{ healthAvg }\n";
+
+	my $h = Cisco::ACI::Stats::Curr::OverallHealth->new(
+			healthAvg => $r->{ fabricOverallHealthHist5min }->{ attributes }->{ healthAvg }
+	);	
+
+	return $h
 }
 
 sub __request {
