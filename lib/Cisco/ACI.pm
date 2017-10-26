@@ -100,12 +100,55 @@ sub __init {
 	$self->{ __jp } = JSON->new;
 }
 
-sub get_vrf_count {
+sub vrf_count {
 	my $self = shift;
+
+	return $self->__get_count( 'fvCtx' )
+}
+
+sub bd_count {
+	my $self = shift;
+
+	return $self->__get_count( 'fvBD' )
+}
+
+sub tenant_count {
+	my $self = shift;
+
+	return $self->__get_count( 'fvTenant' )
+}
+
+sub epg_count {
+	my $self = shift;
+
+	return $self->__get_count( 'fvAEPg' )
+}
+
+sub ep_count {
+	my $self = shift;
+
+	return $self->__get_count( 'fvCEp' )
+}
+
+sub cdev_count {
+	my $self = shift;
+	# Concrete devices
+	return $self->__get_count( 'vnsCDev' )
+}
+
+
+sub service_graphs_count {
+	my $self = shift;
+
+	return $self->__get_count( 'vnsGraphInst' )
+}
+
+sub __get_count {
+	my ( $self, $class ) = @_;
 
 	return $self->{ __jp }->decode(
 		$self->__request(
-			$self->__get_uri( '/api/class/fvCtx.json?rsp-subtree-include=count' )
+			$self->__get_uri( "/api/class/$class.json?rsp-subtree-include=count" )
 		)->content
 	)->{ imdata }->[0]->{ moCount }->{ attributes }->{ count }
 }
