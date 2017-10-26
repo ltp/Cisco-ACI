@@ -3,10 +3,13 @@ package Cisco::ACI;
 use strict;
 use warnings;
 
+use Carp;
 use JSON;
 use HTTP::Request;
 use LWP;
 use XML::Simple;
+use Cisco::ACI::Spine;
+use Cisco::ACI::FaultCounts;
 use Cisco::ACI::Stats::Curr::OverallHealth;
 
 our $VERSION = '0.01';
@@ -95,6 +98,57 @@ sub __init {
 	$self->{ __xp } = XML::Simple->new;
 
 	$self->{ __jp } = JSON->new;
+}
+
+sub get_vrf_count {
+	my $self = shift;
+
+	return $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/class/fvCtx.json?rsp-subtree-include=count' )
+		)->content
+	)->{ imdata }->[0]->{ moCount }->{ attributes }->{ count }
+}
+
+sub tenant {
+	my ( $self, $tenant ) = @_;
+}
+
+sub spines {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Spine->new( $_->{ fabricNode }->{ attributes } )
+	} @{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"spine")' ) 
+		)->content
+	)->{ imdata } }
+}
+
+sub spine {
+	my ( $self, $spine ) = @_;
+
+	confess "Spine identifier not provided" unless $spine;
+
+	my $args = $self->{ __jp }->decode( 
+			$self->__request( 
+				$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,"spine"),eq(fabricNode.id,"201"))'
+				)
+			)->content
+		)->{ imdata }->[0]->{ fabricNode }->{ attributes };
+	$args->{ __aci } = $self;
+	return Cisco::ACI::Spine->new( $args );
+
+
+	return Cisco::ACI::Spine->new(
+		$self->{ __jp }->decode( 
+			$self->__request( 
+				$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,"spine"),eq(fabricNode.id,"201"))'
+				)
+			)->content
+		)->{ imdata }->[0]->{ fabricNode }->{ attributes }, $self
+	)
 }
 
 sub overallHealth5min {
