@@ -4,8 +4,8 @@ use Moose;
 
 has 'cnt'		=> (is => 'rw', isa => 'Int');
 has 'lastCollOffset'	=> (is => 'rw', isa => 'Int');
-has 'repIntvEnd'	=> (is => 'rw', isa => 'Int');
-has 'repIntvStart'	=> (is => 'rw', isa => 'Int');
+has 'repIntvEnd'	=> (is => 'rw', isa => 'Str');
+has 'repIntvStart'	=> (is => 'rw', isa => 'Str');
 
 1;
 
