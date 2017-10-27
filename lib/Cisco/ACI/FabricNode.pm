@@ -1,15 +1,7 @@
 package Cisco::ACI::FabricNode;
 
 use Moose;
-
-#sub BUILDARGS {
-#	my ( $self, $class, $args, $__aci ) = @_;
-#
-#	$args->{ __aci => $__aci };
-#
-#	return $class->$self( $args )
-#}
-
+use Cisco::ACI::Eqptcapacity::L2Usage;
 
 has 'adSt'		=> (is => 'rw', isa => 'Str');
 has 'childAction'	=> (is => 'rw', isa => 'Str');
@@ -32,6 +24,28 @@ has 'vendor'		=> (is => 'rw', isa => 'Str');
 has 'version'		=> (is => 'rw', isa => 'Str');
 has '__aci'		=> (is => 'rw');
 
+#for my $obj ( qw( L2Usage ) ) {{
+#for my $period ( qw(1min 5min) ) {
+#	no strict 'refs';
+#	my $module = "Cisco::ACI::Eqptcapacity::$obj";
+#	eval "require $module";
+#
+#	*{ __PACKAGE__ . "::$obj" } = sub {
+#		my ( $self, $obj, $period ) = @_;
+#
+#		return $module->new( 
+#			$self->__aci->{ __jp }->decode(
+#				$self->__aci->__request(
+#					$self->__aci->__get_uri( 
+#						'/api/mo/'. $self->dn ."/sys/eqptcapacity/CDeqptcapacity$obj$period.json"
+#					)
+#				)->content
+#			)->{ imdata }->[0]->{ "eqptcapacity$obj$period" }->{ attributes }
+#		)
+#	}
+#}
+#}}
+
 sub fault_counts {
 	my $self = shift;
 
@@ -43,6 +57,48 @@ sub fault_counts {
 				)
 			)->content
 		)->{ imdata }->[0]->{ faultCounts }->{ attributes }
+	)
+}
+
+# /api/class/eqptcapacityEntity.json?query-target=self&rsp-subtree-include=stats&rsp-subtree-class=eqptcapacityMcastUsage5min,eqptcapacityL3UsageCap5min,eqptcapacityL3Usage5min,eqptcapacityL2Usage5min,eqptcapacityVlanUsage5min,eqptcapacityPolUsage5min
+
+sub L2Usage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'L2Usage', $period )
+}
+
+sub __get_eqptcapacity {
+	my ( $self, $obj, $period ) = @_;
+
+	defined $period
+		and $period =~ /^((5|15)min|1(h|d|w|mo|qtr|year))$/
+		or return( warn 'Specified period is invalid' );
+
+	my $package = "Cisco::ACI::Eqptcapacity::$obj";
+
+	return $package->new( 
+		$self->__aci->{ __jp }->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri( 
+					'/api/mo/'. $self->dn ."/sys/eqptcapacity/CDeqptcapacity$obj$period.json"
+				)
+			)->content
+		)->{ imdata }->[0]->{ "eqptcapacity$obj$period" }->{ attributes }
+	)
+}
+
+sub _L2_usage_5m {
+	my $self = shift;
+
+	return Cisco::ACI::Eqptcapacity::L2Usage->new( 
+		$self->__aci->{ __jp }->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri( 
+					'/api/mo/'. $self->dn .'/sys/eqptcapacity/CDeqptcapacityL2Usage5min.json'
+				)
+			)->content
+		)->{ imdata }->[0]->{ eqptcapacityL2Usage5min }->{ attributes }
 	)
 }
 
