@@ -2,6 +2,7 @@ package Cisco::ACI::FabricNode;
 
 use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
+use Cisco::ACI::Eqptcapacity::McastUsage;
 
 has 'adSt'		=> (is => 'rw', isa => 'Str');
 has 'childAction'	=> (is => 'rw', isa => 'Str');
@@ -61,6 +62,13 @@ sub fault_counts {
 }
 
 # /api/class/eqptcapacityEntity.json?query-target=self&rsp-subtree-include=stats&rsp-subtree-class=eqptcapacityMcastUsage5min,eqptcapacityL3UsageCap5min,eqptcapacityL3Usage5min,eqptcapacityL2Usage5min,eqptcapacityVlanUsage5min,eqptcapacityPolUsage5min
+
+
+sub McastUsage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'McastUsage', $period )
+}
 
 sub L2Usage {
 	my ( $self, $period ) = @_;
