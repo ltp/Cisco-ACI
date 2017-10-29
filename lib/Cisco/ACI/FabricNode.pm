@@ -3,6 +3,7 @@ package Cisco::ACI::FabricNode;
 use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
 use Cisco::ACI::Eqptcapacity::McastUsage;
+use Cisco::ACI::Eqptcapacity::PolUsage;
 
 has 'adSt'		=> (is => 'rw', isa => 'Str');
 has 'childAction'	=> (is => 'rw', isa => 'Str');
@@ -74,6 +75,13 @@ sub L2Usage {
 	my ( $self, $period ) = @_;
 
 	return $self->__get_eqptcapacity( 'L2Usage', $period )
+}
+
+
+sub PolUsage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'PolUsage', $period )
 }
 
 sub __get_eqptcapacity {
