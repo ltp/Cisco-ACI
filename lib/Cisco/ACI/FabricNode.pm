@@ -4,6 +4,7 @@ use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
 use Cisco::ACI::Eqptcapacity::McastUsage;
 use Cisco::ACI::Eqptcapacity::PolUsage;
+use Cisco::ACI::Eqptcapacity::VlanUsage;
 
 has 'adSt'		=> (is => 'rw', isa => 'Str');
 has 'childAction'	=> (is => 'rw', isa => 'Str');
@@ -82,6 +83,12 @@ sub PolUsage {
 	my ( $self, $period ) = @_;
 
 	return $self->__get_eqptcapacity( 'PolUsage', $period )
+}
+
+sub VlanUsage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'VlanUsage', $period )
 }
 
 sub __get_eqptcapacity {
