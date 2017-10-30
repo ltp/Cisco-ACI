@@ -8,6 +8,8 @@ use JSON;
 use HTTP::Request;
 use LWP;
 use XML::Simple;
+use Cisco::ACI::Rule;
+use Cisco::ACI::FvcapRule;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::FaultCounts;
@@ -137,6 +139,16 @@ sub cdev_count {
 	return $self->__get_count( 'vnsCDev' )
 }
 
+sub get_capability_rules {
+	my $self = shift;
+
+	return map { Cisco::ACI::FvcapRule->new( $_->{ fvcapRule }->{ attributes } ) } 
+	@{ $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/mo/uni/fabric/compcat-default/fvsw-default/capabilities.json?query-target=children&target-subtree-class=fvcapRule' )
+		)->content
+	)->{ imdata } }
+}
 
 sub service_graphs_count {
 	my $self = shift;
