@@ -2,6 +2,7 @@ package Cisco::ACI::FabricNode;
 
 use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
+use Cisco::ACI::Eqptcapacity::L3Usage;
 use Cisco::ACI::Eqptcapacity::McastUsage;
 use Cisco::ACI::Eqptcapacity::PolUsage;
 use Cisco::ACI::Eqptcapacity::VlanUsage;
@@ -78,6 +79,11 @@ sub L2Usage {
 	return $self->__get_eqptcapacity( 'L2Usage', $period )
 }
 
+sub L3Usage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'L3Usage', $period )
+}
 
 sub PolUsage {
 	my ( $self, $period ) = @_;
