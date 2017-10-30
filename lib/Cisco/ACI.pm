@@ -54,6 +54,12 @@ our %OBJ_MAPPING = (
 		*{ __PACKAGE__ . "::$obj\_constraint" } = sub {
 			my $self = shift;
 			return $self->__get_constraint( $OBJ_MAPPING{ $obj } )
+		};
+
+		*{ __PACKAGE__ . "::$obj\_count" } = sub {
+			my $self = shift;
+
+			return $self->__get_count( $OBJ_MAPPING{ $obj } )
 		}
 	}
 }
@@ -151,37 +157,37 @@ sub __get_constraint {
 	)->{ imdata }->[0]->{ fvcapRule }->{ attributes }->{ constraint }
 }
 
-sub vrf_count {
+sub __vrf_count {
 	my $self = shift;
 
 	return $self->__get_count( 'fvCtx' )
 }
 
-sub bd_count {
+sub __bd_count {
 	my $self = shift;
 
 	return $self->__get_count( 'fvBD' )
 }
 
-sub tenant_count {
+sub __tenant_count {
 	my $self = shift;
 
 	return $self->__get_count( 'fvTenant' )
 }
 
-sub epg_count {
+sub __epg_count {
 	my $self = shift;
 
 	return $self->__get_count( 'fvAEPg' )
 }
 
-sub ep_count {
+sub __ep_count {
 	my $self = shift;
 
 	return $self->__get_count( 'fvCEp' )
 }
 
-sub cdev_count {
+sub __cdev_count {
 	my $self = shift;
 	# Concrete devices
 	return $self->__get_count( 'vnsCDev' )
