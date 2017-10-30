@@ -36,6 +36,28 @@ userName
 version
 );
 
+our %OBJ_MAPPING = (
+	tenant		=> 'fvTenant',
+	contract	=> 'fvBrCP',
+	service_graph	=> 'vnsGraphInst',
+	concrete_devices=> 'vnsCDev',
+	bd		=> 'fvBD',
+	epg		=> 'fvAEPg',
+	vrf		=> 'fvCtx',
+	ep		=> 'fvCEp'
+);
+
+{
+	for my $obj ( keys %OBJ_MAPPING ) {
+		no strict 'refs';
+
+		*{ __PACKAGE__ . "::$obj\_constraint" } = sub {
+			my $self = shift;
+			return $self->__get_constraint( $OBJ_MAPPING{ $obj } )
+		}
+	}
+}
+
 sub new {
 	my ( $class, %args ) = @_;
 
@@ -101,6 +123,32 @@ sub __init {
 	$self->{ __xp } = XML::Simple->new;
 
 	$self->{ __jp } = JSON->new;
+}
+
+# Tenant count
+# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvTenant.json?rsp-subtree-include=count
+# Endpoint Group count
+# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvAEPg.json?rsp-subtree-include=count
+# Endpoint Count
+# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvCEp.json?rsp-subtree-include=count
+# L3 Context count
+# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvCtx.json?rsp-subtree-include=count
+# BD count
+# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvBD.json?rsp-subtree-include=count
+sub __tenant_constraint {
+	my $self = shift;
+
+	return $self->__get_constraint( 'fvTenant' )
+}
+
+sub __get_constraint {
+	my ( $self, $class ) = @_;
+
+	return $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( "/api/mo/uni/fabric/compcat-default/fvsw-default/capabilities/fvcaprule-$class-scope-policy-domain-type-limit.json" )
+		)->content
+	)->{ imdata }->[0]->{ fvcapRule }->{ attributes }->{ constraint }
 }
 
 sub vrf_count {
@@ -212,7 +260,15 @@ sub leafs {
 
 	return map {
 		Cisco::ACI::Leaf->new( $_->{ fabricNode }->{ attributes } )
-	} @{ $self->{ __jp }->decode( 
+	}
+	# We need to pass our $self (the Cisco::ACI object) as the __aci attribute
+	# to our Leaf objects so that they can execute methods on "themselves"
+	# using the connection, parser, and methods of the Cisco::ACI instance.
+	# Hence the ugly line below.
+	map {
+		$_->{ fabricNode }->{ attributes }->{__aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
 		$self->__request( 
 			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"leaf")' ) 
 		)->content
