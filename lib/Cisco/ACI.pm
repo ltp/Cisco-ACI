@@ -8,6 +8,7 @@ use JSON;
 use HTTP::Request;
 use LWP;
 use XML::Simple;
+use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::FaultCounts;
 use Cisco::ACI::Stats::Curr::OverallHealth;
@@ -176,7 +177,7 @@ sub spine {
 
 	my $args = $self->{ __jp }->decode( 
 			$self->__request( 
-				$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,"spine"),eq(fabricNode.id,"201"))'
+				$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,\"spine\"),eq(fabricNode.id,\"$spine\"))"
 				)
 			)->content
 		)->{ imdata }->[0]->{ fabricNode }->{ attributes };
@@ -192,6 +193,34 @@ sub spine {
 			)->content
 		)->{ imdata }->[0]->{ fabricNode }->{ attributes }, $self
 	)
+}
+
+sub leafs {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Leaf->new( $_->{ fabricNode }->{ attributes } )
+	} @{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"leaf")' ) 
+		)->content
+	)->{ imdata } }
+}
+
+sub leaf {
+	my ( $self, $leaf ) = @_;
+
+	confess "Leaf identifier not provided" unless $leaf;
+
+	my $args = $self->{ __jp }->decode( 
+			$self->__request( 
+				$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,\"leaf\"),eq(fabricNode.id,\"$leaf\"))"
+				)
+			)->content
+		)->{ imdata }->[0]->{ fabricNode }->{ attributes };
+	$args->{ __aci } = $self;
+
+	return Cisco::ACI::Leaf->new( $args )
 }
 
 sub overallHealth5min {
