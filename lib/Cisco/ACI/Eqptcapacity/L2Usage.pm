@@ -38,7 +38,6 @@ extends 'Cisco::ACI::Stats::Item';
  has 'normalizedTr'	=> (is => 'rw', isa => 'Int');
  has 'normalizedTrBase' => (is => 'rw', isa => 'Int');
  has 'normalizedTtl'	=> (is => 'rw', isa => 'Int');
- has 'rn'		=> (is => 'rw', isa => 'Str');
  has 'status'		=> (is => 'rw', isa => 'Str');
 
 1;
