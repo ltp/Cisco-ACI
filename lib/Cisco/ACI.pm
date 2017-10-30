@@ -131,22 +131,6 @@ sub __init {
 	$self->{ __jp } = JSON->new;
 }
 
-# Tenant count
-# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvTenant.json?rsp-subtree-include=count
-# Endpoint Group count
-# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvAEPg.json?rsp-subtree-include=count
-# Endpoint Count
-# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvCEp.json?rsp-subtree-include=count
-# L3 Context count
-# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvCtx.json?rsp-subtree-include=count
-# BD count
-# https://aci-apic-fs1.its.deakin.edu.au/api/class/fvBD.json?rsp-subtree-include=count
-sub __tenant_constraint {
-	my $self = shift;
-
-	return $self->__get_constraint( 'fvTenant' )
-}
-
 sub __get_constraint {
 	my ( $self, $class ) = @_;
 
@@ -157,40 +141,14 @@ sub __get_constraint {
 	)->{ imdata }->[0]->{ fvcapRule }->{ attributes }->{ constraint }
 }
 
-sub __vrf_count {
-	my $self = shift;
+sub __get_count {
+	my ( $self, $class ) = @_;
 
-	return $self->__get_count( 'fvCtx' )
-}
-
-sub __bd_count {
-	my $self = shift;
-
-	return $self->__get_count( 'fvBD' )
-}
-
-sub __tenant_count {
-	my $self = shift;
-
-	return $self->__get_count( 'fvTenant' )
-}
-
-sub __epg_count {
-	my $self = shift;
-
-	return $self->__get_count( 'fvAEPg' )
-}
-
-sub __ep_count {
-	my $self = shift;
-
-	return $self->__get_count( 'fvCEp' )
-}
-
-sub __cdev_count {
-	my $self = shift;
-	# Concrete devices
-	return $self->__get_count( 'vnsCDev' )
+	return $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( "/api/class/$class.json?rsp-subtree-include=count" )
+		)->content
+	)->{ imdata }->[0]->{ moCount }->{ attributes }->{ count }
 }
 
 sub get_capability_rules {
@@ -208,16 +166,6 @@ sub service_graphs_count {
 	my $self = shift;
 
 	return $self->__get_count( 'vnsGraphInst' )
-}
-
-sub __get_count {
-	my ( $self, $class ) = @_;
-
-	return $self->{ __jp }->decode(
-		$self->__request(
-			$self->__get_uri( "/api/class/$class.json?rsp-subtree-include=count" )
-		)->content
-	)->{ imdata }->[0]->{ moCount }->{ attributes }->{ count }
 }
 
 sub tenant {
