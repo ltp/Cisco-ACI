@@ -179,11 +179,16 @@ sub tenant {
 	my ( $self, $tenant ) = @_;
 }
 
-# 
 sub controllers {
 	my $self = shift;
 
 	return $self->__get_fabricnodes( 'controller' )
+}
+
+sub controller {
+	my ( $self, $id ) = @_;
+
+	$self->__get_fabricnodes( 'controller', $id )
 }
 
 sub spines {
@@ -193,28 +198,9 @@ sub spines {
 }
 
 sub spine {
-	my ( $self, $spine ) = @_;
+	my ( $self, $id ) = @_;
 
-	confess "Spine identifier not provided" unless $spine;
-
-	my $args = $self->{ __jp }->decode( 
-			$self->__request( 
-				$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,\"spine\"),eq(fabricNode.id,\"$spine\"))"
-				)
-			)->content
-		)->{ imdata }->[0]->{ fabricNode }->{ attributes };
-	$args->{ __aci } = $self;
-	return Cisco::ACI::Spine->new( $args );
-
-
-	return Cisco::ACI::Spine->new(
-		$self->{ __jp }->decode( 
-			$self->__request( 
-				$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,"spine"),eq(fabricNode.id,"201"))'
-				)
-			)->content
-		)->{ imdata }->[0]->{ fabricNode }->{ attributes }, $self
-	)
+	return $self->__get_fabricnode( 'spine', $id )
 }
 
 sub leafs {
@@ -224,19 +210,25 @@ sub leafs {
 }
 
 sub leaf {
-	my ( $self, $leaf ) = @_;
+	my ( $self, $id ) = @_;
 
-	confess "Leaf identifier not provided" unless $leaf;
+	return $self->__get_fabricnode( 'leaf', $id )
+}
 
-	my $args = $self->{ __jp }->decode( 
+sub __get_fabricnode {
+	my ( $self, $role, $id ) = @_;
+
+	confess ucfirst( $role ) ." identifier not provided" unless $id;
+
+	my $args = $self->{ __jp }->decode(
 			$self->__request( 
-				$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,\"leaf\"),eq(fabricNode.id,\"$leaf\"))"
+				$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=and(eq(fabricNode.role,\"$role\"),eq(fabricNode.id,\"$id\"))"
 				)
 			)->content
 		)->{ imdata }->[0]->{ fabricNode }->{ attributes };
 	$args->{ __aci } = $self;
 
-	return Cisco::ACI::Leaf->new( $args )
+	return Cisco::ACI::FabricNode->new( $args );
 }
 
 sub __get_fabricnodes {
