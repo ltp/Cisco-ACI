@@ -13,6 +13,7 @@ use Cisco::ACI::FvcapRule;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::FaultCounts;
+use Cisco::ACI::Health::Inst;
 use Cisco::ACI::Stats::Curr::OverallHealth;
 
 our $VERSION = '0.01';
@@ -38,7 +39,7 @@ version
 
 our %OBJ_MAPPING = (
 	tenant		=> 'fvTenant',
-	contract	=> 'fvBrCP',
+	contract	=> 'vzBrCP',
 	service_graph	=> 'vnsGraphInst',
 	concrete_devices=> 'vnsCDev',
 	bd		=> 'fvBD',
