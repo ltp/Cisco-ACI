@@ -184,6 +184,13 @@ sub spines {
 
 	return map {
 		Cisco::ACI::Spine->new( $_->{ fabricNode }->{ attributes } )
+	}
+	# We need to pass our $self (the Cisco::ACI object) as the __aci attribute
+	# to our Leaf objects so that they can execute methods on "themselves"
+	# using the connection, parser, and methods of the Cisco::ACI instance.
+	# Hence the ugly line below.
+	map {
+		$_->{ fabricNode }->{ attributes }->{__aci } = $self; $_;
 	} @{ $self->{ __jp }->decode( 
 		$self->__request( 
 			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"spine")' ) 
