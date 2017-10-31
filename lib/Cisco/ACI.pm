@@ -98,6 +98,12 @@ sub login {
 
 sub refresh {}
 
+sub __jp {
+	my $self = shift;
+
+	return $self->{ __jp }
+}
+
 sub __init {
 	my ( $self, %args ) = @_;
 
