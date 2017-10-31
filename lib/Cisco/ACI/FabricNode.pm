@@ -65,6 +65,19 @@ sub fault_counts {
 	)
 }
 
+sub health {
+	my $self = shift;
+
+	return Cisco::ACI::Health::Inst->new( 
+		$self->__aci->__jp->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri( 
+					'/api/mo/topology/pod-1/node-'. $self->id .'/sys/ch/health.json'
+				)
+			)->content
+		)->{ imdata }->[0]->{ healthInst }->{ attributes }
+	)
+}
 # /api/class/eqptcapacityEntity.json?query-target=self&rsp-subtree-include=stats&rsp-subtree-class=eqptcapacityMcastUsage5min,eqptcapacityL3UsageCap5min,eqptcapacityL3Usage5min,eqptcapacityL2Usage5min,eqptcapacityVlanUsage5min,eqptcapacityPolUsage5min
 
 # Get BDs for node
