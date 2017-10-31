@@ -179,23 +179,17 @@ sub tenant {
 	my ( $self, $tenant ) = @_;
 }
 
+# 
+sub controllers {
+	my $self = shift;
+
+	return $self->__get_fabricnodes( 'controller' )
+}
+
 sub spines {
 	my $self = shift;
 
-	return map {
-		Cisco::ACI::Spine->new( $_->{ fabricNode }->{ attributes } )
-	}
-	# We need to pass our $self (the Cisco::ACI object) as the __aci attribute
-	# to our Leaf objects so that they can execute methods on "themselves"
-	# using the connection, parser, and methods of the Cisco::ACI instance.
-	# Hence the ugly line below.
-	map {
-		$_->{ fabricNode }->{ attributes }->{__aci } = $self; $_;
-	} @{ $self->{ __jp }->decode( 
-		$self->__request( 
-			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"spine")' ) 
-		)->content
-	)->{ imdata } }
+	$self->__get_fabricnodes( 'spine' )
 }
 
 sub spine {
@@ -226,21 +220,7 @@ sub spine {
 sub leafs {
 	my $self = shift;
 
-	return map {
-		Cisco::ACI::Leaf->new( $_->{ fabricNode }->{ attributes } )
-	}
-	# We need to pass our $self (the Cisco::ACI object) as the __aci attribute
-	# to our Leaf objects so that they can execute methods on "themselves"
-	# using the connection, parser, and methods of the Cisco::ACI instance.
-	# Hence the ugly line below.
-	map {
-		$_->{ fabricNode }->{ attributes }->{__aci } = $self; $_;
-	} 
-	@{ $self->{ __jp }->decode( 
-		$self->__request( 
-			$self->__get_uri( '/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,"leaf")' ) 
-		)->content
-	)->{ imdata } }
+	return $self->__get_fabricnodes( 'leaf' )
 }
 
 sub leaf {
@@ -257,6 +237,26 @@ sub leaf {
 	$args->{ __aci } = $self;
 
 	return Cisco::ACI::Leaf->new( $args )
+}
+
+sub __get_fabricnodes {
+	my ( $self, $role ) = @_;
+
+	return map {
+		Cisco::ACI::FabricNode->new( $_->{ fabricNode }->{ attributes } )
+	}
+	# We need to pass our $self (the Cisco::ACI object) as the __aci attribute
+	# to our Leaf objects so that they can execute methods on "themselves"
+	# using the connection, parser, and methods of the Cisco::ACI instance.
+	# Hence the ugly line below.
+	map {
+		$_->{ fabricNode }->{ attributes }->{ __aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( "/api/class/fabricNode.json?query-target-filter=eq(fabricNode.role,\"$role\")" ) 
+		)->content
+	)->{ imdata } }
 }
 
 sub overallHealth5min {
