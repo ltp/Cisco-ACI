@@ -55,7 +55,7 @@ sub fault_counts {
 	my $self = shift;
 
 	return Cisco::ACI::FaultCounts->new( 
-		$self->__aci->{ __jp }->decode(
+		$self->__aci->__jp->decode(
 			$self->__aci->__request(
 				$self->__aci->__get_uri( 
 					'/api/mo/topology/pod-1/node-'. $self->id .'/sys/ch/fltCnts.json'
@@ -67,6 +67,8 @@ sub fault_counts {
 
 # /api/class/eqptcapacityEntity.json?query-target=self&rsp-subtree-include=stats&rsp-subtree-class=eqptcapacityMcastUsage5min,eqptcapacityL3UsageCap5min,eqptcapacityL3Usage5min,eqptcapacityL2Usage5min,eqptcapacityVlanUsage5min,eqptcapacityPolUsage5min
 
+# Get BDs for node
+# https://aci-apic-fs1.its.deakin.edu.au/api/mo/topology/pod-1/node-101.json?query-target=subtree&target-subtree-class=l2BD
 
 sub McastUsage {
 	my ( $self, $period ) = @_;
@@ -110,6 +112,36 @@ sub VlanUsage {
 	return $self->__get_eqptcapacity( 'VlanUsage', $period )
 }
 
+sub EPGUsage {
+	my $self = shift;
+
+	return $self->__get_count( 'fvEpP' )
+}
+
+sub BDUsage {
+	my $self = shift;
+
+	return $self->__get_count( 'l2BD' )
+}
+
+sub VRFUsage {
+	my $self = shift;
+
+	return $self->__get_count( 'l3Dom' )
+}
+
+sub __get_count {
+	my ( $self, $class ) = @_;
+
+	return $self->__aci->__jp->decode(
+		$self->__aci->__request(
+			$self->__aci->__get_uri(
+				'/api/mo/'. $self->dn ."/ccnt-ctxClassCnt.json?rsp-subtree-class=$class"
+			)
+		)->content
+	)->{ imdata }->[0]->{ ctxClassCnt }->{ attributes }->{ count }
+}
+
 sub __get_eqptcapacity {
 	my ( $self, $obj, $period ) = @_;
 
@@ -120,7 +152,7 @@ sub __get_eqptcapacity {
 	my $package = "Cisco::ACI::Eqptcapacity::$obj";
 
 	return $package->new( 
-		$self->__aci->{ __jp }->decode(
+		$self->__aci->__jp->decode(
 			$self->__aci->__request(
 				$self->__aci->__get_uri( 
 					'/api/mo/'. $self->dn ."/sys/eqptcapacity/CDeqptcapacity$obj$period.json"
@@ -130,39 +162,6 @@ sub __get_eqptcapacity {
 	)
 }
 
-sub _L2_usage_5m {
-	my $self = shift;
-
-	return Cisco::ACI::Eqptcapacity::L2Usage->new( 
-		$self->__aci->{ __jp }->decode(
-			$self->__aci->__request(
-				$self->__aci->__get_uri( 
-					'/api/mo/'. $self->dn .'/sys/eqptcapacity/CDeqptcapacityL2Usage5min.json'
-				)
-			)->content
-		)->{ imdata }->[0]->{ eqptcapacityL2Usage5min }->{ attributes }
-	)
-}
-
 1;
 
 __END__
-"adSt": "on",
-"childAction": "",
-"delayedHeartbeat": "no",
-"dn": "topology/pod-1/node-201",
-"extMngdBy": "",
-"fabricSt": "active",
-"id": "201",
-"lcOwn": "local",
-"modTs": "2017-09-06T04:31:09.799+11:00",
-"model": "N9K-C9336PQ",
-"monPolDn": "uni/fabric/monfab-default",
-"name": "aci-spine-fs1",
-"nameAlias": "",
-"role": "spine",
-"serial": "FDO21141NQY",
-"status": "",
-"uid": "0",
-"vendor": "Cisco Systems, Inc",
-"version": ""
