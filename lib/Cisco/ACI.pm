@@ -13,7 +13,9 @@ use Cisco::ACI::FvcapRule;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::FaultCounts;
+use Cisco::ACI::Fabric::Link;
 use Cisco::ACI::Health::Inst;
+use Cisco::ACI::Infra::WiNode;
 use Cisco::ACI::Stats::Curr::OverallHealth;
 
 our $VERSION = '0.01';
@@ -177,6 +179,54 @@ sub service_graphs_count {
 
 sub tenant {
 	my ( $self, $tenant ) = @_;
+}
+
+sub fabric_links {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Fabric::Link->new( $_->{ fabricLink }->{ attributes } )
+	}
+	map {
+		$_->{ fabricLink }->{ attributes }->{ __aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/fabricLink.json' ) 
+		)->content
+	)->{ imdata } }
+}
+
+sub cluster_appliances {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Infra::WiNode->new( $_->{ infraWiNode }->{ attributes } )
+	}
+	map {
+		$_->{ infraWiNode }->{ attributes }->{ __aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/infraWiNode.json' ) 
+		)->content
+	)->{ imdata } }
+}
+
+sub cluster_standby_appliances {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Infra::SnNode->new( $_->{ infraSnNode }->{ attributes } )
+	}
+	map {
+		$_->{ infraSnNode }->{ attributes }->{ __aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/infraSnNode.json' ) 
+		)->content
+	)->{ imdata } }
 }
 
 sub controllers {
