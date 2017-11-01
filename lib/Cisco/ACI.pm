@@ -251,6 +251,24 @@ sub __get_fabricnodes {
 	)->{ imdata } }
 }
 
+# While the controllers() method retrieves the APIC controllers as Cisco::ACI::FabricNode objects,
+# this method retrieves 
+sub apic_appliances {
+
+}
+
+sub health {
+	my $self = shift;
+
+	return Cisco::ACI::Health::Inst->new( 
+		$self->{ __jp }->decode( 
+			$self->__request( 
+				$self->__get_uri( '/api/node/mo/topology/health.json' ) 
+			)->content
+		)->{ imdata }->[0]->{ fabricHealthTotal }->{ attributes }
+	)
+}
+
 sub overallHealth5min {
 	my $self = shift;
 
