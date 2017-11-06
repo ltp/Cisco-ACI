@@ -14,6 +14,8 @@ use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::Tenant;
 use Cisco::ACI::FaultCounts;
+use Cisco::ACI::Eqpt::ExtCh;
+use Cisco::ACI::Fault::Inst;
 use Cisco::ACI::Fabric::Link;
 use Cisco::ACI::Health::Inst;
 use Cisco::ACI::Infra::WiNode;
@@ -280,6 +282,22 @@ sub leaf {
 	return $self->__get_fabricnode( 'leaf', $id )
 }
 
+sub fexs {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Eqpt::ExtCh->new( $_->{ eqptExtCh }->{ attributes } )
+	}
+	map {
+		$_->{ eqptExtCh }->{ attributes }->{ __aci } = $self; $_;
+	} 
+	@{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/eqptExtCh.json' ) 
+		)->content
+	)->{ imdata } }
+}
+
 sub __get_fabricnode {
 	my ( $self, $role, $id ) = @_;
 
@@ -350,6 +368,19 @@ sub overallHealth5min {
 	);	
 
 	return $h
+}
+
+sub faults {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Fault::Inst->new( $_->{ faultInst }->{ attributes } )
+	} @{ $self->{ __jp }->decode( 
+		$self->__request( 
+			$self->__get_uri( '/api/class/faultInst.json' )
+		)->content
+	)->{ imdata } }
+
 }
 
 sub __request {
