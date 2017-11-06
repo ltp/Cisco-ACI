@@ -12,6 +12,7 @@ use Cisco::ACI::Rule;
 use Cisco::ACI::FvcapRule;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
+use Cisco::ACI::Tenant;
 use Cisco::ACI::FaultCounts;
 use Cisco::ACI::Fabric::Link;
 use Cisco::ACI::Health::Inst;
@@ -179,6 +180,20 @@ sub service_graphs_count {
 
 sub tenant {
 	my ( $self, $tenant ) = @_;
+
+	confess 'Tenant identifier not provided' unless $tenant;
+
+	my $args = $self->__jp->decode(
+			$self->__request( 
+				$self->__get_uri( '/api/mo/uni/tn-'. $tenant .'.json'
+				)
+			)->content
+		)->{ imdata }->[0]->{ fvTenant }->{ attributes };
+
+	confess "Tenant $tenant not defined." unless defined $args->{ dn };
+	$args->{ __aci } = $self;
+
+	return Cisco::ACI::Tenant->new( $args );
 }
 
 sub fabric_links {
