@@ -97,8 +97,6 @@ sub login {
 		}
 	}
 
-	#use Data::Dumper;
-	#print Dumper( $self );
 	return $self
 }
 
@@ -336,7 +334,7 @@ sub __get_fabricnodes {
 
 # While the controllers() method retrieves the APIC controllers as Cisco::ACI::FabricNode objects,
 # this method retrieves 
-sub apic_appliances {
+sub __apic_appliances {
 
 }
 
@@ -429,36 +427,197 @@ sub __get_fltCnts_uri {
 
 __END__
 
-=head1 NAME
+=head2 NAME
 
-Cisco::ACI - The great new Cisco::ACI!
+Cisco::ACI - Perl interface to the Cisco APIC API.
 
-=head1 SYNOPSIS
+=head2 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
+This module provides a Perl interface to Cisco APIC API.
 
     use Cisco::ACI;
 
-    my $foo = Cisco::ACI->new();
-    ...
+    my $aci = Cisco::ACI->new(
+			username=> $username,
+			password=> $password,
+			server	=> $server
+    ) or die "Couldn't connect to server $server: $!\n";
 
-=head1 METHODS
+    # Get the leaf nodes of the pod as an array of
+    # Cisco::ACI::FabricNode objects.
+    my @leafs = $aci->get_leafs;
 
-=head2 new ( %ARGS )
+    # Same but for spines (both leaf and spine nodes
+    # are Cisco::ACI::FabricNode objects).
+    my @spines = $aci->get_spines;
 
-=head1 AUTHOR
+    # Or, get a leaf by ID - still returns a 
+    # Cisco::ACI::FabricNode object.
+    my $leaf = $aci->(101);
+
+    # Do some interesting stuff with it.
+    # Like, get the 5min measurements of policy CAM (TCAM) usage
+    # as a Cisco::ACI::Eqptcapacity::PolUsage object.
+    my $pol_usage = $leaf->PolUsage( '5min' );
+
+    # So now we can calculate the policy CAM utilisation
+    my $pol_utilisation = ( $pol_usage->polUsageCum 
+				/ $pol_usage->polUsageCapCum ) * 100;
+
+    # Or get the number of faults present
+    my $faults = $leaf->fault_counts;
+
+    printf( 'Node %s has %d Minor, %d Major, %d Warning, and %d Critical faults\n',
+		$leaf->name,
+		$faults->minor,
+		$faults->maj,
+		$faults->warn,
+		$faults->crit );
+   
+    # And much more... 
+
+=head2 METHODS
+
+=head3 new ( %ARGS )
+
+Constructor.  Creates a new Cisco::ACI object.  This method accepts three mandatory
+and two optional named parameters:
+
+=over 4
+
+=item B<username>
+
+The username with which to connect to the Cisco APIC API.
+
+=item B<password>
+
+The password with which to connect to the Cisco APIC API.
+
+=item B<server>
+
+The resolvable hostname of the Cisco ACI APIC to connect to.
+
+=item B<port>
+
+The TCP port on which to connect to the Cisco ACI APIC, if not specified
+this parameter will default to a value of 443, which is probably what you want.
+
+=item B<proto>
+
+The protocol to use when connecting to the Cisco ACI APIC, if not specified
+this parameter will default to a value of 'https', which is probably what you want.
+
+=back
+
+=head3 bd_constraint ()
+
+Returns the maximum configurable number Bridge Domains (fvBD) in the fabric.
+
+=head3 bd_count ()
+
+Returns the number of configured Bridge Domains (fvBD) in the fabric.
+
+=head3 cluster_appliances ()
+
+Returns all APICs in the cluster as an array of L<Cisco::ACI::Infra::WiNode>
+objects.  Note that APICs are also separately represented as devices of type 
+L<Cisco::ACI::FabricNode> within the Cisco APIC MO (see method B<controllers()).
+
+=head3 cluster_standby_appliances ()
+
+Returns all standby APICs in the cluster as an array of L<Cisco::ACI::Infra::SnNode>
+objects.
+
+=head3 concrete_devices_constraint ()
+
+Returns the maximum configurable number concrete devices (vnsCDev) in the fabric.
+
+=head3 concrete_devices_count ()
+
+Returns the number of configured concrete devices (vnsCDev) in the fabric.
+
+=head3 contract_constraint ()
+
+Returns the maximum configurable number contracts (vzBrCP) in the fabric.
+
+=head3 contract_count ()
+
+Returns the number of configured contracts (vzBrCP) in the fabric.
+
+=head3 controllers ()
+
+Returns all APICs in the cluster as an array of L<Cisco::ACI::FabricNode> objects.
+Note that APICs are also separately represented as devices of type L<Cisco::ACI::Infra::WiNode> 
+within the Cisco APIC MO (see method B<cluster_appliances()).
+
+=head3 controller ( $ID )
+
+Returns the APIC identified by the $ID parameter as a L<Cisco::ACI::FabricNode>
+object.  Note that APICs are numbered sequentially starting from 1.
+
+=head3 ep_constraint ()
+
+Returns the maximum configurable number end points (fvCEp) in the fabric.
+
+=head3 ep_count ()
+
+Returns the number of configured end points (fvCEp) in the fabric.
+
+=head3 epg_constraint ()
+
+Returns the maximum configurable number end point groups (fvAEPg) in the fabric.
+
+=head3 epg_count ()
+
+Returns the number of configured end point groups (fvAEPg) in the fabric.
+
+=head3 fabric_links ()
+=head3 faults ()
+=head3 fexs ()
+=head3 get_capability_rules ()
+=head3 health ()
+=head3 leaf ()
+=head3 leafs ()
+=head3 login ()
+=head3 overallHealth5min ()
+=head3 refresh ()
+=head3 service_graph_constraint ()
+
+Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+
+=head3 service_graph_count ()
+
+Returns the number of configured Bridge Domains (BDs) in the fabric.
+
+=head3 service_graphs_count ()
+=head3 spine ()
+=head3 spines ()
+=head3 tenant ()
+=head3 tenant_constraint ()
+
+Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+
+=head3 tenant_count ()
+
+Returns the number of configured Bridge Domains (BDs) in the fabric.
+
+=head3 vrf_constraint ()
+
+Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+
+
+
+=head2 AUTHOR
 
 Luke Poskitt, C<< <ltp at cpan.org> >>
 
-=head1 BUGS
+=head2 BUGS
 
 Please report any bugs or feature requests to C<bug-cisco-aci at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Cisco-ACI>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
-=head1 SUPPORT
+=head2 SUPPORT
 
 You can find documentation for this module with the perldoc command.
 
@@ -487,10 +646,10 @@ L<http://search.cpan.org/dist/Cisco-ACI/>
 =back
 
 
-=head1 ACKNOWLEDGEMENTS
+=head2 ACKNOWLEDGEMENTS
 
 
-=head1 LICENSE AND COPYRIGHT
+=head2 LICENSE AND COPYRIGHT
 
 Copyright 2017 Luke Poskitt.
 
