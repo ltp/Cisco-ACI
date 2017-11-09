@@ -441,7 +441,10 @@ This module provides a Perl interface to Cisco APIC API.
 			username=> $username,
 			password=> $password,
 			server	=> $server
-    ) or die "Couldn't connect to server $server: $!\n";
+    );
+
+    # Required!
+    $aci->login;
 
     # Get the leaf nodes of the pod as an array of
     # Cisco::ACI::FabricNode objects.
@@ -572,40 +575,83 @@ Returns the maximum configurable number end point groups (fvAEPg) in the fabric.
 Returns the number of configured end point groups (fvAEPg) in the fabric.
 
 =head3 fabric_links ()
+
+Returns all fabric links as an array of L<Cisco::ACI::Fabric::Link> objects.
+
 =head3 faults ()
+
+Returns all fabric faults as an array of L<Cisco::ACI::Fault::Inst> objects.
+
 =head3 fexs ()
+
+Returns all fabric extendeds (fexs) as an array of L<Cisco::ACI::Eqpt::ExtCh> 
+objects.
+
 =head3 get_capability_rules ()
+
+Returns all capacity rules as an array of L<Cisco::ACI::FvcapRule> objects.
+
 =head3 health ()
-=head3 leaf ()
+
+Returns the fabric health as an array of L<Cisco::ACI::Health::Inst> objects.
+
+=head3 leaf ( $ID )
+
+Returns the leaf node identified the the B<$ID> parameter as a
+L<Cisco::ACI::FabricNode> object.
+
 =head3 leafs ()
+
+Returns all leaf nodes as an array of L<Cisco::ACI::FabricNode> objects.
+
 =head3 login ()
+
+Perfoms a login to the ACI APIC API - note that merely calling the constructor
+does not automatically log you into the fabric.  Rather you are required to invoke
+this method to do so.
+
 =head3 overallHealth5min ()
-=head3 refresh ()
+
+Returns the overall health of the fabric for the previous fivce minute interval as
+an L<Cisco::ACI::Stats::Curr::OverallHealth> object.
+
 =head3 service_graph_constraint ()
 
-Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+Returns the maximum configurable number of service graphs (vnsGraphInst) in the fabric.
 
 =head3 service_graph_count ()
 
-Returns the number of configured Bridge Domains (BDs) in the fabric.
+Returns the number of configured service graphs (vnsGraphInst) in the fabric.
 
-=head3 service_graphs_count ()
-=head3 spine ()
+=head3 spine ( $ID )
+
+Returns the spine node identified the the B<$ID> parameter as a
+L<Cisco::ACI::FabricNode> object.
+
 =head3 spines ()
-=head3 tenant ()
+
+Returns all spine nodes as an array of L<Cisco::ACI::FabricNode> objects.
+
+=head3 tenant ( $TENANT )
+
+Returns the tenant identified by the $TENANT parameter as a L<Cisco::ACI:Tenant>
+object.
+
 =head3 tenant_constraint ()
 
-Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+Returns the maximum configurable number of tenant (fvTenant) in the fabric.
 
 =head3 tenant_count ()
 
-Returns the number of configured Bridge Domains (BDs) in the fabric.
+Returns the number of configured tenants (fvTenant) in the fabric.
 
 =head3 vrf_constraint ()
 
-Returns the maximum configurable number Bridge Domains (BDs) in the fabric.
+Returns the maximum configurable number of VRFs (fvCtx) in the fabric.
 
+=head3 vrf_count ()
 
+Returns the number of configured VRFs (fvCtx) in the fabric.
 
 =head2 AUTHOR
 
@@ -644,10 +690,6 @@ L<http://cpanratings.perl.org/d/Cisco-ACI>
 L<http://search.cpan.org/dist/Cisco-ACI/>
 
 =back
-
-
-=head2 ACKNOWLEDGEMENTS
-
 
 =head2 LICENSE AND COPYRIGHT
 
