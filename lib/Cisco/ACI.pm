@@ -100,8 +100,6 @@ sub login {
 	return $self
 }
 
-sub refresh {}
-
 sub __jp {
 	my $self = shift;
 
@@ -170,12 +168,6 @@ sub get_capability_rules {
 			$self->__get_uri( '/api/mo/uni/fabric/compcat-default/fvsw-default/capabilities.json?query-target=children&target-subtree-class=fvcapRule' )
 		)->content
 	)->{ imdata } }
-}
-
-sub service_graphs_count {
-	my $self = shift;
-
-	return $self->__get_count( 'vnsGraphInst' )
 }
 
 sub tenant {
@@ -524,7 +516,7 @@ Returns the number of configured Bridge Domains (fvBD) in the fabric.
 
 Returns all APICs in the cluster as an array of L<Cisco::ACI::Infra::WiNode>
 objects.  Note that APICs are also separately represented as devices of type 
-L<Cisco::ACI::FabricNode> within the Cisco APIC MO (see method B<controllers()).
+L<Cisco::ACI::FabricNode> within the Cisco APIC MO (see method B<controllers()>).
 
 =head3 cluster_standby_appliances ()
 
@@ -551,7 +543,7 @@ Returns the number of configured contracts (vzBrCP) in the fabric.
 
 Returns all APICs in the cluster as an array of L<Cisco::ACI::FabricNode> objects.
 Note that APICs are also separately represented as devices of type L<Cisco::ACI::Infra::WiNode> 
-within the Cisco APIC MO (see method B<cluster_appliances()).
+within the Cisco APIC MO (see method B<cluster_appliances()>).
 
 =head3 controller ( $ID )
 
