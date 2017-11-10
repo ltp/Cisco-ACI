@@ -58,7 +58,7 @@ sub fault_counts {
 		$self->__aci->__jp->decode(
 			$self->__aci->__request(
 				$self->__aci->__get_uri( 
-					'/api/mo/topology/pod-1/node-'. $self->id .'/sys/ch/fltCnts.json'
+					'/api/mo/'. $self->dn .'/sys/ch/fltCnts.json'
 				)
 			)->content
 		)->{ imdata }->[0]->{ faultCounts }->{ attributes }
@@ -72,7 +72,7 @@ sub health {
 		$self->__aci->__jp->decode(
 			$self->__aci->__request(
 				$self->__aci->__get_uri( 
-					'/api/mo/topology/pod-1/node-'. $self->id .'/sys/ch/health.json'
+					'/api/mo/'. $self->dn .'/sys/ch/health.json'
 				)
 			)->content
 		)->{ imdata }->[0]->{ healthInst }->{ attributes }
