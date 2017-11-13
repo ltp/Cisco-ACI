@@ -21,7 +21,7 @@ use Cisco::ACI::Health::Inst;
 use Cisco::ACI::Infra::WiNode;
 use Cisco::ACI::Stats::Curr::OverallHealth;
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 our @LOGIN_ATTR = qw(
 buildTime
 creationTime

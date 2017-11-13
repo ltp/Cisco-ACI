@@ -1,5 +1,8 @@
 Revision history for Cisco-ACI
 
+0.03    Mon Nov 13 2017 lukep@deakin.edu.au 0.03
+	Add fexs() method to Cisco::ACI::FabricNode.
+
 0.02    Fri Nov 10 2017 lukep@deakin.edu.au 0.02
         Minor patch of node ID in Cisco::ACI::FabricNode.
 
