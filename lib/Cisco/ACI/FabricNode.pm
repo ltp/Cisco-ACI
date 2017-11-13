@@ -51,6 +51,24 @@ has '__aci'		=> (is => 'rw');
 #}
 #}}
 
+sub fexs {
+	my $self = shift;
+
+        return map {
+                Cisco::ACI::Eqpt::ExtCh->new( $_->{ eqptExtCh }->{ attributes } )
+        }
+        map {
+                $_->{ eqptExtCh }->{ attributes }->{ __aci } = $self; $_; 
+        }
+	@{ $self->__aci->__jp->decode(
+		$self->__aci->__request(
+			$self->__aci->__get_uri( 
+				'/api/class/'. $self->dn .'/eqptExtCh.json'
+			)
+		)->content
+	)->{ imdata } }
+}
+
 sub fault_counts {
 	my $self = shift;
 
