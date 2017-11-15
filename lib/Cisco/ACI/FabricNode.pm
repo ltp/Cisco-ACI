@@ -58,7 +58,7 @@ sub fexs {
                 Cisco::ACI::Eqpt::ExtCh->new( $_->{ eqptExtCh }->{ attributes } )
         }
         map {
-                $_->{ eqptExtCh }->{ attributes }->{ __aci } = $self; $_; 
+                $_->{ eqptExtCh }->{ attributes }->{ __aci } = $self->__aci; $_; 
         }
 	@{ $self->__aci->__jp->decode(
 		$self->__aci->__request(
