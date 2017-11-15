@@ -29,28 +29,6 @@ has 'vendor'		=> (is => 'rw', isa => 'Str');
 has 'version'		=> (is => 'rw', isa => 'Str');
 has '__aci'		=> (is => 'rw');
 
-#for my $obj ( qw( L2Usage ) ) {{
-#for my $period ( qw(1min 5min) ) {
-#	no strict 'refs';
-#	my $module = "Cisco::ACI::Eqptcapacity::$obj";
-#	eval "require $module";
-#
-#	*{ __PACKAGE__ . "::$obj" } = sub {
-#		my ( $self, $obj, $period ) = @_;
-#
-#		return $module->new( 
-#			$self->__aci->{ __jp }->decode(
-#				$self->__aci->__request(
-#					$self->__aci->__get_uri( 
-#						'/api/mo/'. $self->dn ."/sys/eqptcapacity/CDeqptcapacity$obj$period.json"
-#					)
-#				)->content
-#			)->{ imdata }->[0]->{ "eqptcapacity$obj$period" }->{ attributes }
-#		)
-#	}
-#}
-#}}
-
 sub fexs {
 	my $self = shift;
 
@@ -96,10 +74,6 @@ sub health {
 		)->{ imdata }->[0]->{ healthInst }->{ attributes }
 	)
 }
-# /api/class/eqptcapacityEntity.json?query-target=self&rsp-subtree-include=stats&rsp-subtree-class=eqptcapacityMcastUsage5min,eqptcapacityL3UsageCap5min,eqptcapacityL3Usage5min,eqptcapacityL2Usage5min,eqptcapacityVlanUsage5min,eqptcapacityPolUsage5min
-
-# Get BDs for node
-# https://aci-apic-fs1.its.deakin.edu.au/api/mo/topology/pod-1/node-101.json?query-target=subtree&target-subtree-class=l2BD
 
 sub McastUsage {
 	my ( $self, $period ) = @_;
