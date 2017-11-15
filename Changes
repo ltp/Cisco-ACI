@@ -1,5 +1,11 @@
 Revision history for Cisco-ACI
 
+0.05    Mon Nov 13 2017 lukep@deakin.edu.au 0.04
+	Fix reference from $self to $self->__aci as passed
+	to child Cisco::ACI::Eqpt::ExtCh (FEX) objects.
+	Add pod() and pods() methods and Cisco::ACI::fabric::Pod
+	class.
+
 0.03    Mon Nov 13 2017 lukep@deakin.edu.au 0.03
 	Add fexs() method to Cisco::ACI::FabricNode.
 

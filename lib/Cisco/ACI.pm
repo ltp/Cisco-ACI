@@ -17,6 +17,7 @@ use Cisco::ACI::FaultCounts;
 use Cisco::ACI::Eqpt::ExtCh;
 use Cisco::ACI::Fault::Inst;
 use Cisco::ACI::Fabric::Link;
+use Cisco::ACI::Fabric::Pod;
 use Cisco::ACI::Health::Inst;
 use Cisco::ACI::Infra::WiNode;
 use Cisco::ACI::Stats::Curr::OverallHealth;
@@ -186,6 +187,40 @@ sub tenant {
 	$args->{ __aci } = $self;
 
 	return Cisco::ACI::Tenant->new( $args );
+}
+
+sub pod {
+	my ( $self, $pod ) = @_;
+
+	confess 'Pod identifier not provided' unless $pod;
+
+	my $args = $self->__jp->decode(
+			$self->__request( 
+				$self->__get_uri( '/api/mo/topology/pod-'. $pod .'.json'
+				)
+			)->content
+		)->{ imdata }->[0]->{ fabricPod }->{ attributes };
+
+	confess "Pod $pod not defined." unless defined $args->{ dn };
+	$args->{ __aci } = $self;
+
+	return Cisco::ACI::Fabric::Pod->new( $args )
+}
+	
+sub pods {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Fabric::Pod->new( $_->{ fabricPod }->{ attributes } )
+	}
+	map {
+		$_->{ fabricPod }->{ attributes }->{ __aci } = $self; $_;
+	}
+	@{ $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/class/fabricPod.json' )
+		)->content
+	)->{ imdata } }
 }
 
 sub fabric_links {
