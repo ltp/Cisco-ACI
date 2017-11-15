@@ -28,6 +28,34 @@ sub fabric_links {
 	)->{ imdata } }
 }
 
+sub fault_counts {
+        my $self = shift;
+
+        return Cisco::ACI::FaultCounts->new( 
+		$self->__aci->__jp->decode(
+                        $self->__aci->__request(
+                                $self->__aci->__get_uri( 
+                                        '/api/mo/'. $self->dn .'/fltCnts.json'
+                                )
+                        )->content
+                )->{ imdata }->[0]->{ faultCountsWithDetails }->{ attributes }
+        )
+}
+
+sub health {
+        my $self = shift;
+
+        return Cisco::ACI::Health::Inst->new( 
+                $self->__aci->__jp->decode(
+                        $self->__aci->__request(
+                                $self->__aci->__get_uri( 
+                                        '/api/mo/'. $self->dn .'/health.json'
+                                )
+                        )->content
+                )->{ imdata }->[0]->{ fabricHealthTotal }->{ attributes }
+        )
+}
+
 1;
 
 __END__
