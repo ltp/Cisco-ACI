@@ -26,22 +26,3 @@ has 'warnDelegated'		=> (is => 'rw', isa => 'Str');
 
 __END__
 
-"childAction": "",
-"crit": "0",
-"critAcked": "0",
-"critAckedandDelegated": "0",
-"critDelegated": "0",
-"dn": "topology/pod-1/node-201/sys/ch/fltCnts",
-"maj": "0",
-"majAcked": "0",
-"majAckedandDelegated": "0",
-"majDelegated": "0",
-"minor": "0",
-"minorAcked": "0",
-"minorAckedandDelegated": "0",
-"minorDelegated": "0",
-"status": "",
-"warn": "0",
-"warnAcked": "0",
-"warnAckedandDelegated": "0",
-"warnDelegated": "0"
