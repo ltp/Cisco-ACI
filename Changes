@@ -1,6 +1,9 @@
 Revision history for Cisco-ACI
 
-0.05    Mon Nov 13 2017 lukep@deakin.edu.au 0.04
+0.06    Mon Nov 13 2017 lukep@deakin.edu.au 0.06
+	Added spines() and leafs() methods for Cisco:A:CI::Fabric::Pod objects.
+
+0.05    Mon Nov 13 2017 lukep@deakin.edu.au 0.05
 	Fix reference from $self to $self->__aci as passed
 	to child Cisco::ACI::Eqpt::ExtCh (FEX) objects.
 	Add pod() and pods() methods and Cisco::ACI::fabric::Pod
