@@ -1,6 +1,7 @@
 package Cisco::ACI::Fabric::Pod;
 
 use Moose;
+use Data::Dumper;
 
 has 'id'	=> ( is => 'rw', isa => 'Str' );
 has 'dn'	=> ( is => 'rw', isa => 'Str' );
@@ -54,6 +55,34 @@ sub health {
                         )->content
                 )->{ imdata }->[0]->{ fabricHealthTotal }->{ attributes }
         )
+}
+
+sub spines {
+        my ( $self, $id ) = @_;
+
+        return $self->__get_fabricnodes( 'spine' )
+}
+
+sub leafs {
+        my $self = shift;
+
+        return $self->__get_fabricnodes( 'leaf' )
+}
+
+sub __get_fabricnodes {
+        my ( $self, $role ) = @_; 
+
+        return map {
+                Cisco::ACI::FabricNode->new( $_->{ fabricNode }->{ attributes } )
+        }
+        map {
+                $_->{ fabricNode }->{ attributes }->{ __aci } = $self; $_; 
+        }
+        @{ $self->__aci->__jp->decode( 
+                $self->__aci->__request( 
+                        $self->__aci->__get_uri( '/api/mo/'. $self->dn .".json?query-target=subtree&target-subtree-class=fabricNode&query-target-filter=eq(fabricNode.role,\"$role\")" )
+                )->content
+        )->{ imdata } }
 }
 
 1;
