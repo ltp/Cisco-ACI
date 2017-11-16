@@ -17,6 +17,7 @@ lib/Cisco/ACI/Fabric/Link.pm
 lib/Cisco/ACI/FabricNode.pm
 lib/Cisco/ACI/Fault/Info.pm
 lib/Cisco/ACI/Fault/Inst.pm
+lib/Cisco/ACI/Fabric/Pod.pm
 lib/Cisco/ACI/FaultCounts.pm
 lib/Cisco/ACI/FvcapRule.pm
 lib/Cisco/ACI/Health/AInst.pm
