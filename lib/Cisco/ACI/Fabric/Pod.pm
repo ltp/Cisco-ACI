@@ -69,6 +69,12 @@ sub leafs {
         return $self->__get_fabricnodes( 'leaf' )
 }
 
+sub controllers {
+        my $self = shift;
+
+        return $self->__get_fabricnodes( 'controller' )
+}
+
 sub __get_fabricnodes {
         my ( $self, $role ) = @_; 
 
@@ -76,7 +82,7 @@ sub __get_fabricnodes {
                 Cisco::ACI::FabricNode->new( $_->{ fabricNode }->{ attributes } )
         }
         map {
-                $_->{ fabricNode }->{ attributes }->{ __aci } = $self; $_; 
+                $_->{ fabricNode }->{ attributes }->{ __aci } = $self->__aci; $_; 
         }
         @{ $self->__aci->__jp->decode( 
                 $self->__aci->__request( 
