@@ -37,6 +37,26 @@ sub fault_counts {
                 )->{ imdata }->[0]->{ faultCountsWithDetails }->{ attributes }
         )
 }
+
+sub L3Out {
+	my ( $self, $l3out ) = @_;
+
+	confess 'L3out identifier not provided' unless $l3out;
+
+	my $args = $self->__jp->decode(
+			$self->__request(
+				$self->__get_uri( '/api/mo/uni/tn-'. $self->dn .'/out-'. $l3out .'json'	)
+			)->content
+		)->{ imdata }->[0]->{ l3extOut }->{ attributes };
+
+	confess "L3Out $l3out not defined." unless defined $args->{ dn };
+	$args->{ __aci } = $self;
+
+	return Cisco::ACI::L3ext::Out->new( $args )
+}
+
 1;
 
 __END__
+
+$aci->tenant( 'Deakin-Production' )->L3Out( 'WF-WAN-L3-OUT' )->
