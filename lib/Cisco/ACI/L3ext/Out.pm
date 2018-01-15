@@ -2,9 +2,9 @@ package Cisco::ACI::L3ext::Out;
 
 use Moose;
 
-extends 'Cisco::ACI::FvNp';
+extends 'Cisco::ACI::Extnw::Out';
 
-has 'enforceRtCtrl'	=> ( is => 'rw', isa => 'Str' );
+has 'enforceRtctrl'	=> ( is => 'rw', isa => 'Str' );
 has 'name'		=> ( is => 'rw', isa => 'Str' );
 
 1;

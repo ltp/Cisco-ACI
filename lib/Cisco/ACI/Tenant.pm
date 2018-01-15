@@ -1,6 +1,7 @@
 package Cisco::ACI::Tenant;
 
 use Moose;
+use Cisco::ACI::L3ext::Out;
 
 extends 'Cisco::ACI::Pol::Dom';
 
@@ -43,9 +44,9 @@ sub L3Out {
 
 	confess 'L3out identifier not provided' unless $l3out;
 
-	my $args = $self->__jp->decode(
-			$self->__request(
-				$self->__get_uri( '/api/mo/uni/tn-'. $self->dn .'/out-'. $l3out .'json'	)
+	my $args = $self->__aci->__jp->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri( '/api/mo/'. $self->dn .'/out-'. $l3out .'.json'	)
 			)->content
 		)->{ imdata }->[0]->{ l3extOut }->{ attributes };
 

@@ -2,7 +2,7 @@ package Cisco::ACI::FvDef;
 
 use Moose;
 
-extends 'Cisco::ACI::FVDef';
+extends 'Cisco::ACI::Pol::DefRoot';
 
 1;
 
