@@ -75,6 +75,41 @@ sub add_l3extSubnet {
 	return $res
 }
 
+sub remove_l3extSubnet {
+        my ( $self, $l3extSubnet ) = @_; 
+
+        confess 'L3extSubnet identifier not provided' unless $l3extSubnet;
+
+	my $data = '{
+			"l3extInstP": {
+				"attributes": {
+					"dn": "'.$self->dn.'",
+					"status": "modified"
+				},
+				"children": [
+					{
+						"l3extSubnet": {
+							"attributes": {
+								"dn": "'.$self->dn.'/extsubnet-['.$l3extSubnet.']",
+								"status": "deleted"
+							},
+							"children": []
+						}
+					}
+				]
+			}
+		}';
+	
+        my $res = $self->__aci->__jp->decode(
+                        $self->__aci->__request(
+                                $self->__aci->__get_uri( '/api/mo/'. $self->dn .'.json' ),
+				$data
+                        )->content 
+		);
+
+	return $res
+}
+
 1;
 
 __END__
