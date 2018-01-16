@@ -22,7 +22,7 @@ sub L3ExtInstP {
                 )->{ imdata }->[0]->{ l3extInstP }->{ attributes };
 
         confess "L3ExtInstP $l3extInstP not defined." unless defined $args->{ dn };
-        $args->{ __aci } = $self;
+        $args->{ __aci } = $self->__aci;
 
         return Cisco::ACI::L3ext::InstP->new( $args )
 

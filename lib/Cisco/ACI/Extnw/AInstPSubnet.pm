@@ -2,6 +2,6 @@ package Cisco::ACI::Extnw::AInstPSubnet;
 
 use Moose;
 
-extends 'Cisco::ACI::Extnw::AInstPSubnet';
+extends 'Cisco::ACI::Rtctrl::ASubnet';
 
 1;
