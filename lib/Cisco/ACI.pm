@@ -81,6 +81,12 @@ sub new {
 	return $self
 }
 
+sub error {
+	my $self = shift;
+
+	return $self->{ error }
+}
+
 sub login {
 	my $self = shift;
 
@@ -88,7 +94,7 @@ sub login {
 
 	my $r = $self->__request( $self->__get_login_uri, to_json( $json ) );
 
-	return $self->{ error } if $self->{ error };
+	return if $self->{ error };
 
 	$r = from_json( $r->content );
 
