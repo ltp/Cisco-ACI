@@ -1,5 +1,8 @@
 Revision history for Cisco-ACI
 
+0.06    Wed Jan 17 2018 lukep@deakin.edu.au 0.08
+	Lot of new L3Out functionality.
+
 0.06    Mon Nov 13 2017 lukep@deakin.edu.au 0.06
 	Added spines(), leafs(), and controllers() methods for 
 	Cisco::ACI::Fabric::Pod objects.
