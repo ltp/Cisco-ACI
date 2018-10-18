@@ -203,7 +203,7 @@ sub bds {
 		Cisco::ACI::FvBD->new( $_->{ fvBD }->{ attributes } )
 	}
 	map {
-		$_->{ fabricPod }->{ attributes }->{ __aci } = $self; $_;
+		$_->{ fvBD }->{ attributes }->{ __aci } = $self; $_;
 	}
 	@{ $self->{ __jp }->decode(
 		$self->__request(
