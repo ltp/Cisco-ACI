@@ -30,6 +30,21 @@ sub l3extSubnets {
 	return @l3extSubnets	
 }
 
+sub _l3extSubnets {
+	my $self = shift;
+
+	my @l3extSubnets =  @{ $self->__aci->__jp->decode(
+                        $self->__aci->__request(
+                                $self->__aci->__get_uri( '/api/mo/'. $self->dn 
+					.'.json?query-target=subtree&target-subtree-class=l3extSubnet'
+				)
+                        )->content
+		)->{ imdata }
+	};
+
+	return @l3extSubnets	
+}
+
 sub l3extSubnet {
         my ( $self, $l3extSubnet ) = @_; 
 
