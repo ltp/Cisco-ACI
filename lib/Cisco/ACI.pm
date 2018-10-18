@@ -10,6 +10,7 @@ use LWP;
 use XML::Simple;
 use Cisco::ACI::Rule;
 use Cisco::ACI::FvcapRule;
+use Cisco::ACI::FvBD;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::Tenant;
@@ -193,6 +194,22 @@ sub tenant {
 	$args->{ __aci } = $self;
 
 	return Cisco::ACI::Tenant->new( $args );
+}
+
+sub bds {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::FvBD->new( $_->{ fvBD }->{ attributes } )
+	}
+	map {
+		$_->{ fabricPod }->{ attributes }->{ __aci } = $self; $_;
+	}
+	@{ $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/class/fvBD.json' )
+		)->content
+	)->{ imdata } }
 }
 
 sub pod {
