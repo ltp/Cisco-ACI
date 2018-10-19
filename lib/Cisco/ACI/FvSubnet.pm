@@ -1,4 +1,4 @@
-package Cisco::ACI::FVSubnet;
+package Cisco::ACI::FvSubnet;
 
 use Moose;
 

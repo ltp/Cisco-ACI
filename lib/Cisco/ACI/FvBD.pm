@@ -1,6 +1,7 @@
 package Cisco::ACI::FvBD;
 
 use Moose;
+use Cisco::ACI::FvSubnet;
 
 extends 'Cisco::ACI::FvABDPol';
 
@@ -11,8 +12,14 @@ has '__aci'	=> ( is => 'rw' );
 sub subnets {
 	my $self = shift;
 
-	#/api/node/mo/uni/tn-Deakin-Production/BD-VLAN-822-BD.xml?query-target=children
-	# target-subtree-class=fvSubnet
+	return map { Cisco::ACI::FvSubnet->new( $_->{ fvSubnet }->{ attributes } ) }
+	@{ $self->__aci->__jp->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri(
+					'/api/mo/'. $self->dn . '.json?query-target=children&target-subtree-class=fvSubnet'
+				)
+			)->content
+	)->{ imdata } }
 }
 
 1;
