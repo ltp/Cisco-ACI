@@ -1,5 +1,8 @@
 Revision history for Cisco-ACI
 
+0.08    Wed Nov 21 2018 lukep@deakin.edu.au 0.08
+	Various new classes and methods for working with BDs and EPGs.
+
 0.07    Wed Jan 17 2018 lukep@deakin.edu.au 0.07
 	New methods for working with L3Out objects.
 

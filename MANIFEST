@@ -1,9 +1,12 @@
 Changes
 Makefile.PL
-MANIFEST			This list of files
+MANIFEST
+MANIFEST.SKIP
 README
 lib/Cisco/ACI.pm
 lib/Cisco/ACI/Condition/Info.pm
+lib/Cisco/ACI/Dhcp/ALbl.pm
+lib/Cisco/ACI/Dhcp/Lbl.pm
 lib/Cisco/ACI/Eqpt/Cont.pm
 lib/Cisco/ACI/Eqpt/ExtCh.pm
 lib/Cisco/ACI/Eqpt/Item.pm
@@ -24,12 +27,18 @@ lib/Cisco/ACI/Fault/Info.pm
 lib/Cisco/ACI/Fault/Inst.pm
 lib/Cisco/ACI/Fabric/Pod.pm
 lib/Cisco/ACI/FaultCounts.pm
-lib/Cisco/ACI/FvcapRule.pm
+lib/Cisco/ACI/FvABD.pm
+lib/Cisco/ACI/FvABDPol.pm
 lib/Cisco/ACI/FvATg.pm
+lib/Cisco/ACI/FvBD.pm
+lib/Cisco/ACI/FvDom.pm
 lib/Cisco/ACI/FvComp.pm
 lib/Cisco/ACI/FvDef.pm
 lib/Cisco/ACI/FvEPg.pm
+lib/Cisco/ACI/FvL2Dom.pm
 lib/Cisco/ACI/FvNp.pm
+lib/Cisco/ACI/FvSubnet.pm
+lib/Cisco/ACI/FvcapRule.pm
 lib/Cisco/ACI/Health/AInst.pm
 lib/Cisco/ACI/Health/Inst.pm
 lib/Cisco/ACI/Infra/GeNode.pm
@@ -42,10 +51,13 @@ lib/Cisco/ACI/L3ext/Subnet.pm
 lib/Cisco/ACI/Leaf.pm
 lib/Cisco/ACI/Naming/NamedObject.pm
 lib/Cisco/ACI/Pol/Comp.pm
+lib/Cisco/ACI/Pol/ConsElem.pm
 lib/Cisco/ACI/Pol/Def.pm
 lib/Cisco/ACI/Pol/DefRoot.pm
 lib/Cisco/ACI/Pol/Dom.pm
 lib/Cisco/ACI/Pol/Obj.pm
+lib/Cisco/ACI/Pol/Lbl.pm
+lib/Cisco/ACI/Reln/Inst.pm
 lib/Cisco/ACI/Rtctrl/ASubnet.pm
 lib/Cisco/ACI/Rule.pm
 lib/Cisco/ACI/Spine.pm
