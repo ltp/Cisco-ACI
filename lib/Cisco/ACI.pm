@@ -212,6 +212,30 @@ sub bds {
 	)->{ imdata } }
 }
 
+sub epgs {
+	my $self = shift;
+
+	my $r = $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/class/fvEPg.json' )
+		)->content
+	)->{ imdata };
+
+	return $r;
+
+	return map {
+		Cisco::ACI::FvEPg->new( $_->{ fvAEPg }->{ attributes } )
+	}
+	map {
+		$_->{ fvAEPg }->{ attributes }->{ __aci } = $self; $_;
+	}
+	@{ $self->{ __jp }->decode(
+		$self->__request(
+			$self->__get_uri( '/api/class/fvEPg.json' )
+		)->content
+	)->{ imdata } }
+}
+
 sub pod {
 	my ( $self, $pod ) = @_;
 
