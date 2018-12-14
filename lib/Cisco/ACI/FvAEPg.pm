@@ -1,4 +1,4 @@
-package Cisco::ACI::FvAEPg.pm
+package Cisco::ACI::FvAEPg;
 
 use Moose;
 

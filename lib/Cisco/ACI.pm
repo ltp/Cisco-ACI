@@ -10,6 +10,7 @@ use LWP;
 use XML::Simple;
 use Cisco::ACI::Rule;
 use Cisco::ACI::FvcapRule;
+use Cisco::ACI::FvAEPg;
 use Cisco::ACI::FvBD;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
@@ -212,26 +213,18 @@ sub bds {
 	)->{ imdata } }
 }
 
-sub epgs {
+sub aepgs {
 	my $self = shift;
 
-	my $r = $self->{ __jp }->decode(
-		$self->__request(
-			$self->__get_uri( '/api/class/fvEPg.json' )
-		)->content
-	)->{ imdata };
-
-	return $r;
-
 	return map {
-		Cisco::ACI::FvEPg->new( $_->{ fvAEPg }->{ attributes } )
+		Cisco::ACI::FvAEPg->new( $_->{ fvAEPg }->{ attributes } )
 	}
 	map {
 		$_->{ fvAEPg }->{ attributes }->{ __aci } = $self; $_;
 	}
 	@{ $self->{ __jp }->decode(
 		$self->__request(
-			$self->__get_uri( '/api/class/fvEPg.json' )
+			$self->__get_uri( '/api/class/fvAEPg.json' )
 		)->content
 	)->{ imdata } }
 }
