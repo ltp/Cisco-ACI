@@ -5,11 +5,11 @@ use Cisco::ACI::FvCEp;
 
 extends 'Cisco::ACI::FvCEPg';
 
-has 'fwdCtrl'			=> ( is => 'rw',, isa => 'Str' );
-has 'isAttrBasedEPg'		=> ( is => 'rw',, isa => 'Str' );
-has 'isSharedSrvMsiteEPg'	=> ( is => 'rw',, isa => 'Str' );
-has 'monPolDn'			=> ( is => 'rw',, isa => 'Str' );
-has 'pcEnfPref'			=> ( is => 'rw',, isa => 'Str' );
+has 'fwdCtrl'			=> ( is => 'rw', isa => 'Str' );
+has 'isAttrBasedEPg'		=> ( is => 'rw', isa => 'Str' );
+has 'isSharedSrvMsiteEPg'	=> ( is => 'rw', isa => 'Str' );
+has 'monPolDn'			=> ( is => 'rw', isa => 'Str' );
+has 'pcEnfPref'			=> ( is => 'rw', isa => 'Str' );
 
 has '__aci'     => (is => 'rw');
 
@@ -29,3 +29,5 @@ sub eps {
 }
 
 1;
+
+__END__
