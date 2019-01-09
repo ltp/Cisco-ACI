@@ -12,6 +12,7 @@ use Cisco::ACI::Rule;
 use Cisco::ACI::FvcapRule;
 use Cisco::ACI::FvAEPg;
 use Cisco::ACI::FvBD;
+use Cisco::ACI::FvCEp;
 use Cisco::ACI::Leaf;
 use Cisco::ACI::Spine;
 use Cisco::ACI::Tenant;

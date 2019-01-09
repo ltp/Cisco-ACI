@@ -2,7 +2,7 @@ package Cisco::ACI::FvCEp;
 
 use Moose;
 
-extnds 'Cisco::ACI::FvEp';
+extends 'Cisco::ACI::FvEp';
 
 has 'contName'	=> ( is => 'rw', isa => 'Str' );
 has 'idepdn'	=> ( is => 'rw', isa => 'Str' );
