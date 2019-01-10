@@ -2,6 +2,7 @@ package Cisco::ACI::FvAEPg;
 
 use Moose;
 use Cisco::ACI::FvCEp;
+use Cisco::ACI::FvRsBd;
 
 extends 'Cisco::ACI::FvCEPg';
 
@@ -26,6 +27,20 @@ sub eps {
                         )
                 )->content
         )->{ imdata } }
+}
+
+sub bd {
+	my $self = shift;
+
+	return Cisco::ACI::FvRsBd->new(
+		$self->__aci->__jp->decode(
+			$self->__aci->__request(
+				$self->__aci->__get_uri(
+					'/api/mo/'. $self->dn .'/rsbd.json'
+				)
+			)->content
+		)->{ imdata }->[0]->{ fvRsBd }->{ attributes }
+	)
 }
 
 1;
