@@ -1,9 +1,9 @@
 Revision history for Cisco-ACI
 
-0.09    Thu Jan 10 2018 lukep@deakin.edu.au 0.09
+0.09    Thu Jan 10 2019 lukep@deakin.edu.au 0.09
 	Added method eps() to Cisco::ACI::FvAEPg to provide retrieval of endpoints for an EPG.
 	Added method bd() to Cisco::ACI::FvAEPg to provide retrieval of EPG BD relation.
-	Added method domains() to Cisco::ACI::FvAEPg to provide retrieval of EPG domains (cisco::ACI::FvRsDomAtt.
+	Added method domains() to Cisco::ACI::FvAEPg to provide retrieval of EPG domains (Cisco::ACI::FvRsDomAtt).
 
 0.08    Wed Nov 21 2018 lukep@deakin.edu.au 0.08
 	Various new classes and methods for working with BDs and EPGs.
