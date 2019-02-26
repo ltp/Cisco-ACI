@@ -1,5 +1,8 @@
 Revision history for Cisco-ACI
 
+0.10    Tue Feb 26 2019 lukep@deakin.edu.au 0.10
+	Added faults() method to Cisco::Tenant.
+
 0.09    Thu Jan 10 2019 lukep@deakin.edu.au 0.09
 	Added method eps() to Cisco::ACI::FvAEPg to provide retrieval of endpoints for an EPG.
 	Added method bd() to Cisco::ACI::FvAEPg to provide retrieval of EPG BD relation.
