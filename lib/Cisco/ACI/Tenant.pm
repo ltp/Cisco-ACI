@@ -24,6 +24,19 @@ sub health {
         )
 }
 
+sub faults {
+	my $self = shift;
+
+	return map {
+		Cisco::ACI::Fault::Inst->new( $_->{ faultInst }->{ attributes } )
+	}
+	@{ $self->__aci->__jp->decode(
+		$self->__aci->__request(
+			$self->__aci->__get_uri( '/api/mo/'. $self->dn 
+				.'.json?rsp-subtree-include=faults,no-scoped,subtree' )
+		)->content
+	)->{ imdata } }
+}
 
 sub fault_counts {
         my $self = shift;
