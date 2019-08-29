@@ -18,6 +18,7 @@ has 'v4LocalEpCapSpct'	=> (is => 'rw', isa => 'Int');
 has 'v4LocalEpCapThr'	=> (is => 'rw');
 has 'v4LocalEpCapTr'	=> (is => 'rw', isa => 'Int');
 has 'v4LocalEpCapTrBase'=> (is => 'rw', isa => 'Int');
+has 'v4LocalEpCapTtl'	=> (is => 'rw', isa => 'Int');
 has 'v6LocalEpCapAvg'	=> (is => 'rw', isa => 'Int');
 has 'v6LocalEpCapBase'	=> (is => 'rw', isa => 'Int');
 has 'v6LocalEpCapCum'	=> (is => 'rw', isa => 'Int');
@@ -29,7 +30,7 @@ has 'v6LocalEpCapRate'	=> (is => 'rw', isa => 'Num');
 has 'v6LocalEpCapSpct'	=> (is => 'rw', isa => 'Int');
 has 'v6LocalEpCapThr'	=> (is => 'rw');
 has 'v6LocalEpCapTr'	=> (is => 'rw', isa => 'Int');
-has 'v6LocalEpCapTrBase'=> (is => 'rw', isa => 'Int');
+has 'v6LocalEpCapTtl'	=> (is => 'rw', isa => 'Int');
 
 1;
 
