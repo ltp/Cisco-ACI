@@ -4,6 +4,7 @@ use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
 use Cisco::ACI::Eqptcapacity::L3Usage;
 use Cisco::ACI::Eqptcapacity::L3UsageCap;
+use Cisco::ACI::Eqptcapacity::L3TotalUsageCap;
 use Cisco::ACI::Eqptcapacity::McastUsage;
 use Cisco::ACI::Eqptcapacity::PolUsage;
 use Cisco::ACI::Eqptcapacity::VlanUsage;
@@ -103,6 +104,12 @@ sub L3UsageCap {
 	my ( $self, $period ) = @_;
 
 	return $self->__get_eqptcapacity( 'L3UsageCap', $period )
+}
+
+sub L3TotalUsageCap {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'L3TotalUsageCap', $period )
 }
 
 sub PolUsage {
