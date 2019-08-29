@@ -1,5 +1,8 @@
 Revision history for Cisco-ACI
 
+0.11    Thu Aug 29 2019 lukep@deakin.edu.au 0.11
+	Changed LocalEpCapCum to LocalEpCapTtl equivalents due to API/MO changes in v4.x.
+
 0.10    Tue Feb 26 2019 lukep@deakin.edu.au 0.10
 	Added faults() method to Cisco::Tenant.
 
