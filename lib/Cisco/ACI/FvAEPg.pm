@@ -14,8 +14,7 @@ has 'isAttrBasedEPg'		=> ( is => 'rw', isa => 'Str' );
 has 'isSharedSrvMsiteEPg'	=> ( is => 'rw', isa => 'Str' );
 has 'monPolDn'			=> ( is => 'rw', isa => 'Str' );
 has 'pcEnfPref'			=> ( is => 'rw', isa => 'Str' );
-
-has '__aci'     => (is => 'rw');
+has '__aci'			=> ( is => 'rw' );
 
 sub eps {
         my $self = shift;
