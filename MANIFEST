@@ -4,6 +4,7 @@ lib/Cisco/ACI/Dhcp/ALbl.pm
 lib/Cisco/ACI/Dhcp/Lbl.pm
 lib/Cisco/ACI/Eqptcapacity/L2Usage.pm
 lib/Cisco/ACI/Eqptcapacity/L3UsageCap.pm
+lib/Cisco/ACI/Eqptcapacity/L3TotalUsageCap.pm
 lib/Cisco/ACI/Eqptcapacity/L3Usage.pm
 lib/Cisco/ACI/Eqptcapacity/McastUsage.pm
 lib/Cisco/ACI/Eqptcapacity/PolUsage.pm
