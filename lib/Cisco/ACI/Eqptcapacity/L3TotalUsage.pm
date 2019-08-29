@@ -5,7 +5,7 @@ use Moose;
 has 'cnt'		=> (is => 'rw', isa => 'Int');
 has 'lastCollOffset'	=> (is => 'rw', isa => 'Int');
 has 'modTs'		=> (is => 'rw', isa => 'Str');
-has 'repIntvEnd'	=> (is => 'rw', isa => 'Int');
+has 'repIntvEnd'	=> (is => 'rw', isa => 'Str');
 has 'repIntvStart'	=> (is => 'rw', isa => 'Str');
 has 'status'		=> (is => 'rw', isa => 'Str');
 has 'v4TotalEpAvg'	=> (is => 'rw', isa => 'Int');
