@@ -1,5 +1,9 @@
 Revision history for Cisco-ACI
 
+0.12    Thu Aug 29 2019 lukep@deakin.edu.au 0.12
+	Added Cisco::ACI::Eqptcapacity::L3TotalUsageCap class.
+	Added L3TotalUsageCap() methods.
+
 0.11    Thu Aug 29 2019 lukep@deakin.edu.au 0.11
 	Changed LocalEpCapCum to LocalEpCapTtl equivalents due to API/MO changes in v4.x.
 
