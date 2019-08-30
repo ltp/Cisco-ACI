@@ -3,6 +3,7 @@ lib/Cisco/ACI/Condition/Info.pm
 lib/Cisco/ACI/Dhcp/ALbl.pm
 lib/Cisco/ACI/Dhcp/Lbl.pm
 lib/Cisco/ACI/Eqptcapacity/L2Usage.pm
+lib/Cisco/ACI/Eqptcapacity/L2TotalUsage.pm
 lib/Cisco/ACI/Eqptcapacity/L3UsageCap.pm
 lib/Cisco/ACI/Eqptcapacity/L3TotalUsage.pm
 lib/Cisco/ACI/Eqptcapacity/L3TotalUsageCap.pm

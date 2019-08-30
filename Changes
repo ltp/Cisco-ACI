@@ -1,5 +1,9 @@
 Revision history for Cisco-ACI
 
+0.14    Fri Aug 30 2019 lukep@deakin.edu.au 0.14
+	Added Cisco::ACI::Eqptcapacity::L2TotalUsage class.
+	Added L2TotalUsage() method.
+	
 0.13    Thu Aug 29 2019 lukep@deakin.edu.au 0.13
 	Added Cisco::ACI::Eqptcapacity::L3TotalUsage class.
 	Added L3TotalUsage() methods.
