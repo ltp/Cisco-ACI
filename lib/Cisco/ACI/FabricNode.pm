@@ -2,6 +2,7 @@ package Cisco::ACI::FabricNode;
 
 use Moose;
 use Cisco::ACI::Eqptcapacity::L2Usage;
+use Cisco::ACI::Eqptcapacity::L2TotalUsage;
 use Cisco::ACI::Eqptcapacity::L3Usage;
 use Cisco::ACI::Eqptcapacity::L3UsageCap;
 use Cisco::ACI::Eqptcapacity::L3TotalUsage;
@@ -87,6 +88,12 @@ sub L2Usage {
 	my ( $self, $period ) = @_;
 
 	return $self->__get_eqptcapacity( 'L2Usage', $period )
+}
+
+sub L2TotalUsage {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_eqptcapacity( 'L2TotalUsage', $period )
 }
 
 sub L2UsageCap {
