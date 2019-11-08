@@ -9,6 +9,7 @@ use Cisco::ACI::FvRsDomAtt;
 use Cisco::ACI::Stats::Curr::L2EgrBytesAg15min;
 use Cisco::ACI::Stats::Curr::L2EgrPktsAg15min;
 use Cisco::ACI::Stats::Curr::L2IngrBytesAg15min;
+use Cisco::ACI::Stats::Curr::L2IngrPktsAg15min;
 
 extends 'Cisco::ACI::FvCEPg';
 
@@ -109,6 +110,12 @@ sub l2EgrPktsAg {
 	my ( $self, $period ) = @_;
 
 	return $self->__get_statistics( 'l2EgrPktsAg', $period )
+}
+
+sub l2IngrPktsAg {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_statistics( 'l2IngrPktsAg', $period )
 }
 
 sub __get_statistics {
