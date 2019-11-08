@@ -6,6 +6,7 @@ use Cisco::ACI::FvRsBd;
 use Cisco::ACI::FvRsCons;
 use Cisco::ACI::FvRsProv;
 use Cisco::ACI::FvRsDomAtt;
+use Cisco::ACI::Stats::Curr::L2EgrBytesAg15min;
 
 extends 'Cisco::ACI::FvCEPg';
 
@@ -89,6 +90,34 @@ sub provided_contracts {
                 )->content
         )->{ imdata } }
 }
+
+sub l2EgrBytesAg {
+	my ( $self, $period ) = @_;
+
+	return $self->__get_statistics( 'l2EgrBytesAg', $period )
+}
+
+sub __get_statistics {
+	my ( $self, $obj, $period ) = @_;
+
+	defined $period
+	and $period =~ /^((5|15)min|1(h|d|w|mo|qtr|year))$/
+	or return( warn 'Specified period is invalid' );
+
+        my $package = "Cisco::ACI::Stats::Curr::" . ucfirst( "$obj$period" );
+
+        return $package->new( 
+                $self->__aci->__jp->decode(
+                        $self->__aci->__request(
+                                $self->__aci->__get_uri( 
+                                        '/api/mo/'. $self->dn ."/CD$obj$period.json"
+                                )
+                        )->content
+                )->{ imdata }->[0]->{ "$obj$period" }->{ attributes }
+        )
+
+}
+
 1;
 
 __END__
