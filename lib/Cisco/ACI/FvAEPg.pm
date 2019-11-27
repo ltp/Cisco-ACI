@@ -127,16 +127,22 @@ sub __get_statistics {
 
         my $package = "Cisco::ACI::Stats::Curr::" . ucfirst( "$obj$period" );
 
-        return $package->new( 
+	print "Getting: /api/mo/". $self->dn ."/HD$obj$period-0.json\n";
+
+	# Note that there is a difference between a CDl2EgrBytesAg15min object and a 
+	# HDl2EgrBytesAg15min-0 object - in this method, for now, we grab the most 
+	# recent interval period (note the -0.json appended) whcih requires that we 
+	# access the $obj.'Hist'.$period object in the returned data and not an 
+	# "$obj$period" object which would be returned by a CDl2EgrBytesAg15min object.
+	return $package->new( 
                 $self->__aci->__jp->decode(
                         $self->__aci->__request(
                                 $self->__aci->__get_uri( 
-                                        '/api/mo/'. $self->dn ."/CD$obj$period.json"
+                                        '/api/mo/'. $self->dn ."/HD$obj$period-0.json"
                                 )
                         )->content
-                )->{ imdata }->[0]->{ "$obj$period" }->{ attributes }
+                )->{ imdata }->[0]->{ $obj.'Hist'.$period }->{ attributes }
         )
-
 }
 
 1;
