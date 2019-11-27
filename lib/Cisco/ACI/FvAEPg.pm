@@ -127,8 +127,6 @@ sub __get_statistics {
 
         my $package = "Cisco::ACI::Stats::Curr::" . ucfirst( "$obj$period" );
 
-	print "Getting: /api/mo/". $self->dn ."/HD$obj$period-0.json\n";
-
 	# Note that there is a difference between a CDl2EgrBytesAg15min object and a 
 	# HDl2EgrBytesAg15min-0 object - in this method, for now, we grab the most 
 	# recent interval period (note the -0.json appended) whcih requires that we 
